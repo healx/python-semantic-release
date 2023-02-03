@@ -35,13 +35,25 @@ def get_pattern_with_commit_subject(pattern):
 
 
 def get_version_pattern():
-    prerelease_pattern = get_prerelease_pattern()
-    return rf"(\d+\.\d+\.\d+({prerelease_pattern})?)"
+    # prerelease_pattern = get_prerelease_pattern()
+    # return rf"(\d+\.\d+\.\d+({prerelease_pattern})?)"
+    return _version_pattern()
 
 
 def get_release_version_pattern():
-    prerelease_pattern = get_prerelease_pattern()
-    return rf"v?(\d+\.\d+\.\d+(?!.*{prerelease_pattern}))"
+    # prerelease_pattern = get_prerelease_pattern()
+    # return rf"v?(\d+\.\d+\.\d+(?!.*{prerelease_pattern}))"
+    return _version_pattern()
+
+
+def _version_pattern():
+    version = r"(\d+\.\d+\.\d+?)"
+    if "tag_format" in config:
+        tag_format = config.get("tag_format")
+        return tag_format.format(version=version)
+    else:
+        prerelease_pattern = get_prerelease_pattern()
+        return rf"v?({version}?!.*{prerelease_pattern}))"
 
 
 def get_commit_release_version_pattern():
